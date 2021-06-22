@@ -77,7 +77,31 @@ const addBookHandler = (request, h) => {
 /* end addBookHandler */
 
 const getAllBooksHandler = (request, h) => {
-  const filteredBooks = books
+  const { reading, finished, name } = request.query
+
+  const filteredBooks = books.filter((book) => {
+    if (reading) {
+      if (reading === '0' || reading === '1') {
+        return book.reading === (reading === '1')
+      } else {
+        return books
+      }
+    }
+
+    if (finished) {
+      if (finished === '0' || finished === '1') {
+        return book.finished === (finished === '1')
+      } else {
+        return books
+      }
+    }
+
+    if (name !== undefined) {
+      return book.name.toLowerCase().includes(name.toLowerCase())
+    }
+
+    return books
+  })
 
   const response = h.response({
     status: 'success',
